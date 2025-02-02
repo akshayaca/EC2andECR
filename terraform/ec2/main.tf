@@ -1,6 +1,12 @@
 data "aws_vpc" "default" {
   default = true
 }
+
+resource "aws_key_pair" "terraform_key" {
+  key_name   = "terraform-key"
+  public_key = file("~/.ssh/id_rsa.pub") # Ensure this is the correct path to your local public key
+}
+
 resource "aws_security_group" "ec2_sg" {
   name        = "ec2_sg"
   description = "Allow HTTP, MySQL, and SSH access"
@@ -73,6 +79,7 @@ resource "aws_instance" "ec2_instance" {
   subnet_id              = var.subnet_id
   security_groups         = [aws_security_group.ec2_sg.id] # Reference security group
   associate_public_ip_address = true
+  key_name               = aws_key_pair.terraform_key.key_name
   iam_instance_profile   = "LabInstanceProfile" # Replace with your IAM role
 
   tags = {

@@ -3,15 +3,11 @@ provider "aws" {
 }
 
 module "ecr" {
-   source = "./ecr"
+  source = "./ecr"
 }
-
 
 module "ec2" {
-  source = "./ec2"
-  subnet_id = "subnet-01fc542d9e479d056" # Replace with your public Subnet ID
-  vpc_id   = "vpc-0bd2f93c15156dfff"     # Replace with your Default VPC ID
-}
-output "ec2_security_group_id" {
-  value = module.ec2.ec2_security_group_id
+  source    = "./ec2"
+  subnet_id = var.subnet_id
+  vpc_id    = var.vpc_id
 }
